@@ -12,13 +12,18 @@
 <body>
     
     <div class="main-container">
-        <form action="/login" method="post">
+        <form action="/login" method="POST">
             <div>
                 <label for="email">Email</label>
                 <input type="email" name="email" id="email" required>
+
+                <label for="otp">OTP</label>
+                <input type="number" name="otp" id="otp">
+                
             </div>
 
-            <button type="submit"> Submit </button>
+            <button type="submit" class="otp-button" name="button" value="isOtp"> Generate OTP </button>
+            <button type="submit" class="login-button" name="button" value="isLogin"> Login </button>
 
         </form>
     </div>

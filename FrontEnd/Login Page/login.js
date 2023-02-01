@@ -1,1 +1,1 @@
-console.log("Login.html is rendered")
+console.log("Login.html is rendered");
