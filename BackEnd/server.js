@@ -6,7 +6,8 @@ const _ = require("lodash");
 const session = require("express-session");
 
 const portConfig = require("./config/port");
-const mailservice = require("./Service/mailservice");
+const utils = require("./Service/utils");
+
 
 let rootPath = path.join(__dirname , "../");
 
@@ -18,7 +19,6 @@ app.use(session({
 app.use(express.static(rootPath));
 app.use(bodyparser.urlencoded({ extended: false }))
 app.use(bodyparser.json())
-
 app.set('view-engine', 'ejs');
 
 
@@ -28,8 +28,8 @@ app.set('view-engine', 'ejs');
 //Storing data at server level
 /*Each user object is of format -> 
 {
-    email : emailId,
-    otp : otpGenerated
+    email : email, type = string
+    otp : otpGenerated, type = string
 }*/
 
 let users = [];
@@ -38,18 +38,20 @@ let users = [];
 
 
 //Show main page login.html
-app.get("/" , express.static(rootPath) , (req, res) => {
+app.get("/" , utils.redirectToDashBoardIfLoggedIn , (req, res) => {
     let pathForLoginhtml = path.join(__dirname , '../FrontEnd/Login Page/login.html');
-    res.sendFile(pathForLoginhtml);
+    return res.sendFile(pathForLoginhtml);
+})
+
+app.get("/dashboard" , (req, res) => {
+    return res.sendFile(path.join(__dirname , '../FrontEnd/Main Page/main.html'));
 })
 
 
 app.post("/login" , (req, res) => {
-
-    console.log("/login is hit")
+    
 
     let payload = req.body;
-    console.log("🚀 ~ file: server.js:46 ~ app.post ~ payload", payload)
 
     if(!payload.email){
         res.status(400).send("Email not present");
@@ -57,33 +59,50 @@ app.post("/login" , (req, res) => {
 
     if(payload.button === "isOtp"){
 
-        console.log("insinde isOtp");
-
-        //Generate OTP and send mail and route back to login.html with some prompt message
         //Load service's
         const otpService = require("./Service/otpservice");
         const otpServiceInst = new otpService();
+        const mailService = require("./Service/mailservice");
+        const mailServiceInst = new mailService();
+
+
+        //Check if user already exists, if so send otp to user ->
+
+        let isUserAlreadyPresent = utils.isAttributeAlreadyUsed(users, "email" , payload.email);
+
+        if(isUserAlreadyPresent){
+            //Send user Details via mail and redirect to handleButton
+            return res.render("handleButton.ejs" , {email : payload.email , error : false});
+        }
         
         let generatedOtp = otpServiceInst.generateOTP(users);
 
         let user = {
             email : payload.email,
-            otp : generatedOtp
+            otp : generatedOtp.toString()
         }
 
         users.push(user);
 
-        const mailService = require("./Service/mailservice");
-        const mailServiceInst = new mailService();
-
         //Send the mail with otp
-        res.render("handleButton.ejs" , {email : payload.email});
+        return res.render("handleButton.ejs" , {email : payload.email , error : false});
     }
 
     //Else if is login then 
     // 1) login and route to main.html to show the contents if login is correct
     // 2) If login is wrong, route to handleButton.ejs with a error prompt!
     
+    let isVerifiedOtp = utils.checkOtp(users , payload.email , payload.otp);
+
+    if(isVerifiedOtp){
+        //Save session in req obj, route to main.html
+        req.session.user = isVerifiedOtp;
+
+        return res.redirect("/dashboard");
+    }
+
+    //If login is wrong
+    return res.render("handleButton.ejs" , {email : payload , error : true});
 
 })
 
