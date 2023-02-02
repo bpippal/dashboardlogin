@@ -4,6 +4,7 @@ const path = require("path");
 const bodyparser = require("body-parser");
 const _ = require("lodash");
 const session = require("express-session");
+const cors = require("cors");
 
 const portConfig = require("./config/port");
 const utils = require("./Service/utils");
@@ -11,6 +12,7 @@ const utils = require("./Service/utils");
 
 let rootPath = path.join(__dirname , "../");
 
+app.use(cors())
 app.use(session({
     secret : "Bharat",
     resave : false,
@@ -106,6 +108,27 @@ app.post("/login" , (req, res) => {
 
 })
 
+app.get("/data" , (req, res) => {
+
+    const dataService = require("./Service/dataservice");
+    const dataServiceInst = new dataService();
+
+    const data = dataServiceInst.getData();
+
+    res.json(data);
+})
+
+app.get("/data/:searchBy" , (req, res) => {
+    
+    const dataService = require("./Service/dataservice");
+    const dataServiceInst = new dataService();
+
+    const filterBy = req.params.searchBy;
+
+    let filteredData = dataServiceInst.filterData(dataServiceInst.getData() , filterBy)
+
+    res.json(filteredData);
+})
 
 //Load static files for html
 app.get("/static/login" , (req , res) => {
