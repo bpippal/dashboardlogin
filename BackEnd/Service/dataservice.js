@@ -26,7 +26,9 @@ dataservice.prototype.addKeyValue = function (list , key , value){
 
 dataservice.prototype.filterData = function (list , filterBy){
    
-    //Implement Filter Data
+    return _.filter(list, function(obj) {
+        return (obj.Name && obj.Name.toLowerCase().includes(filterBy)) || (obj.Language && obj.Language.toLowerCase().includes(filterBy)) 
+    });
 
 }
 

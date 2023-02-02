@@ -123,7 +123,7 @@ app.get("/data/:searchBy" , (req, res) => {
     const dataService = require("./Service/dataservice");
     const dataServiceInst = new dataService();
 
-    const filterBy = req.params.searchBy;
+    const filterBy = req.params.searchBy.toLowerCase();
 
     let filteredData = dataServiceInst.filterData(dataServiceInst.getData() , filterBy)
 
@@ -133,6 +133,14 @@ app.get("/data/:searchBy" , (req, res) => {
 //Load static files for html
 app.get("/static/login" , (req , res) => {
     res.sendFile(rootPath + "FrontEnd/Login Page/login.js")
+})
+
+app.get("/static/mainjs" , (req, res) => {
+    res.sendFile(rootPath + "FrontEnd/Main Page/main.js")
+})
+
+app.get("/static/maincss" , (req, res) => {
+    res.sendFile(rootPath + "FrontEnd/Main Page/main.css")
 })
 
 
