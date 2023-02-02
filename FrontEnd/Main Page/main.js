@@ -2,16 +2,35 @@ console.log("Hello main.js");
 
 const searchNode = document.querySelector("div input#search-box");
 
-searchNode.addEventListener("input" , (event) => {
-    //Call fetch api ? 
+function debounce (callback , delay){
 
-    fetch("http://localhost:5600/data" , {
-        headers : {
-            'Access-Control-Allow-Origin': '*'
-        }
-    })
+    let timer;
+
+    function debouncedFunction(){
+        clearTimeout(timer);
+        timer = setTimeout(callback,delay);
+    }
+
+    return debouncedFunction;
+
+}
+
+function searchDataBy(){
+
+    let input = searchNode.value;
+
+    fetch(`http://localhost:5500/data/${input}`)
     .then(res => res.json())
-    .then((finalRes) => {
-        console.log(finalRes);
+    .then((response) => {
+
+        console.log("🚀 ~ file: main.js:25 ~ .then ~ response", response)
+
+        //With the filtered response, show some data to UI
+
+
+        //
     })
-})
+
+}
+
+searchNode.addEventListener("input" , debounce(searchDataBy , 300));
