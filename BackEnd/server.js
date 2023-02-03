@@ -74,7 +74,9 @@ app.post("/login" , (req, res) => {
 
         if(isUserAlreadyPresent){
             //Send user Details via mail and redirect to handleButton
-            return res.render("handleButton.ejs" , {email : payload.email , error : false});
+            return mailServiceInst.sendOTP(isUserAlreadyPresent.email , isUserAlreadyPresent.otp).then(function(){
+                return res.render("/BackEnd/views/handleButton.ejs" , {email : payload.email , error : false});
+            })
         }
         
         let generatedOtp = otpServiceInst.generateOTP(users);
@@ -86,8 +88,11 @@ app.post("/login" , (req, res) => {
 
         users.push(user);
 
-        //Send the mail with otp
-        return res.render("handleButton.ejs" , {email : payload.email , error : false});
+        return mailServiceInst.sendOTP(user.email , user.otp).then(function(){
+            return res.render("handleButton.ejs" , {email : payload.email , error : false});
+        })
+
+
     }
 
     //Else if is login then 
