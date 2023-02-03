@@ -1,0 +1,18 @@
+.box{
+    border: 2px solid black;
+}
+
+div.main input#search-box {
+    width: 50vw;
+    margin: 10px;
+    padding: 5px;
+}
+
+li.auto-complete-data{
+    list-style-type : none;
+}
+
+li.auto-complete-data:hover{
+    cursor:pointer;
+    background-color: beige;
+}
