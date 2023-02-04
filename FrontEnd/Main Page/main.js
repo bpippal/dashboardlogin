@@ -69,6 +69,8 @@ function searchDataBy(){
 
             let autoCompleteDataNodes = document.querySelectorAll("li.auto-complete-data");
 
+            //handleSearchButtonByInput used to handle the output while selecting result from auto-populated data or while hitting the search button.
+
             autoCompleteDataNodes.forEach((eachNode) => {
                 eachNode.addEventListener("click" , handleSearchButtonByInput)
             })
@@ -132,6 +134,7 @@ function getTemplateBydData(data){
 
 }
 
+//Populate's data on the node 
 function populateData(node , data){
     
     clearInnerHtmlByNode(node);
@@ -154,5 +157,5 @@ searchNode.addEventListener("blur" , () => {
     resultNode.classList.remove("transparent");
 })
 
-
+//Main event which gets triggered on every key, added debounce so the delay helps avoid calling multiple requests to server
 searchNode.addEventListener("input" , debounce(searchDataBy , 300));
