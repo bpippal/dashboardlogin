@@ -1,6 +1,8 @@
 const _ = require("lodash")
+const baseservice = require("./baseservice");
 
 function dataservice(){
+    baseservice.call(this);
     this.serviceName = "dataservice";
 }
 

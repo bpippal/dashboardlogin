@@ -1,6 +1,7 @@
 console.log("Hello main.js");
 
 const searchNode = document.querySelector("div input#search-box");
+const resultNode = document.querySelector("div.result");
 
 let utility = {
     escapeQuotes: function(string) {
@@ -31,42 +32,8 @@ function clearInnerHtmlByNode(node){
 //finalData -> Stores the data
 let finalData
 
-function handleSearchButtonByInput(event){
-
-    let resultNode = document.querySelector("div.result");
-
-    //Clear the auto completed data
-    clearInnerHtmlByNode(document.querySelector("div.auto-complete"));
-    clearInnerHtmlByNode(resultNode);
-    searchNode.value = ""
-    
-    //If event type is of li node, take pick value from it
-    if(event.srcElement.nodeName === "LI"){
-        let clickedValue = event.target.innerText;
-
-        //Filtering is required here
-
-        let filteredData = finalData.filter(obj => (obj.Name && obj.Name === clickedValue) || (obj.Language && obj.Language === clickedValue))
-        
-
-        filteredData.forEach((eachData) => {
-            resultNode.innerText += JSON.stringify(eachData);
-        })
-
-    } else {
-    //If event type is of button, take value from somewhere ? 
-        //Final data to be considered here anyway as it is fetched from the actual input in search node.
-
-        finalData.forEach((eachData) => {
-            resultNode.innerText += JSON.stringify(eachData);
-        })
-
-    }
-
-}
-
 function searchDataBy(){
-
+    
     let input = searchNode.value;
     let autoCompleteNode = document.querySelector("div.auto-complete");
     let searchButton = document.querySelector("div.main button");
@@ -86,14 +53,14 @@ function searchDataBy(){
                 if(data[i] && data[i].Name){
                     let name = utility.unescapeQuotes(data[i].Name)
                     autoCompleteNode.innerHTML += `
-                    <li class="auto-complete-data">${name}</li>
+                    <li class="auto-complete-data box">${name}</li>
                     `;
                 }
 
                 if(data[i] && data[i].Language){
                     let lang = utility.unescapeQuotes(data[i].Language);
                     autoCompleteNode.innerHTML += `
-                    <li class="auto-complete-data">${lang}</li>
+                    <li class="auto-complete-data box">${lang}</li>
                     `;
                 }
                 
@@ -116,5 +83,76 @@ function searchDataBy(){
 
 
 }
+
+function handleSearchButtonByInput(event){
+
+    //Clear the auto completed data
+    clearInnerHtmlByNode(document.querySelector("div.auto-complete"));
+    clearInnerHtmlByNode(resultNode);
+    searchNode.value = ""
+    
+    //If event type is of li node, take pick value from it
+    if(event.srcElement.nodeName === "LI"){
+        let clickedValue = event.target.innerText;
+
+        //Filtering is required here
+        let filteredData = finalData.filter(obj => (obj.Name && obj.Name === clickedValue) || (obj.Language && obj.Language === clickedValue))
+        
+
+        //populateData by passing node
+        populateData(resultNode , filteredData)
+
+    } else {
+        //Final data to be considered here anyway as it is fetched from the actual input in search node.
+        populateData(resultNode , finalData)
+    }
+
+}
+
+function getTemplateBydData(data){
+
+    let keys = Object.keys(data);
+    let startOfTemp = `<div class="result-item box">
+    <ul>`;
+    
+    keys.forEach((eachKey , index) => {
+        if(eachKey !== "type" && index < 4){
+            startOfTemp += `<li class="card-details"> ${eachKey} - ${data[eachKey]}`;
+        }
+    })
+
+    if(data.type === "country"){
+        startOfTemp += `<li class="card-details"> <a href="/html/${data.Name}" target="_blank"> Click here to see more details of ${data.Name} </a> </li>`;
+    }
+
+    startOfTemp += `</ul>
+    </div>`;
+
+    return startOfTemp;
+
+}
+
+function populateData(node , data){
+    
+    clearInnerHtmlByNode(node);
+    
+    data.forEach((eachData) => {
+
+        let template = getTemplateBydData(eachData);
+
+        node.innerHTML += template;
+        
+    })
+
+}
+
+searchNode.addEventListener("focus" , () => {
+    resultNode.classList.add("transparent");
+})
+
+searchNode.addEventListener("blur" , () => {
+    resultNode.classList.remove("transparent");
+})
+
 
 searchNode.addEventListener("input" , debounce(searchDataBy , 300));

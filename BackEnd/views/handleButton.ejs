@@ -1,14 +1,40 @@
-<% if(error === false){ %> 
+<html>
 
-    <h2> OTP has been sent to <%= email %></h2>
+    <style>
+        div{
+            border: 1px solid black;
+            background-color:#dbf4f1;
+            max-width: 70vw;
+            margin: auto;
+            margin-top: 100px;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+        }
 
-<% } %>
+        html{
+            background-color: #dbf4f1;
+        }
+    </style>
+
+    <div>
+
+        <% if(error === false){ %> 
+
+            <h2> OTP has been sent to <%= email %></h2>
+        
+        <% } %>
+        
+        
+        <% if(error === true){ %> 
+        
+            <h2>Invalid OTP entered, please try again !</h2>
+        
+        <% } %>
+        
+        <a href="/"> Click here to go back to main page </a>        
+    </div>
 
 
-<% if(error === true){ %> 
+</html>
 
-    <h2>Invalid OTP entered, please try again !</h2>
-
-<% } %>
-
-<a href="/"> Click here to go back to main page </a>

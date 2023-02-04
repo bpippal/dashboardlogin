@@ -10,20 +10,28 @@
     <title>Document</title>
 </head>
 <body>
+
+    <div class="main ">
+
+        <div class="search-container">
+            <input type="text" id="search-box">
+            <button type="button">Search</button>
     
-    <div class="main box">
+            <div class="auto-complete">
+                <!-- Populate auto-complete results here -->
+            </div>
+        </div>
 
-        <input type="text" id="search-box">
-        <button type="button">Search</button>
-
-        <div class="auto-complete box">
-            <!-- Populate auto-complete results here -->
+        <div class="logout-container">
+            <form action="/logout" method="post">
+                <button type="submit">Logout</button>
+            </form>
         </div>
 
     </div>
 
-    <div class="result">
-
+    <div class="result ">
+        <!-- Populate final results here -->
     </div>
 
 </body>

@@ -1,5 +1,20 @@
+html{
+    background-color: #dbf4f1;
+}
+
 .box{
     border: 2px solid black;
+    max-width: 20vw;
+    padding: 5px;
+    border-radius: 2px;
+}
+
+div.main{
+    display: flex;
+    justify-content: space-between;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 50px;
 }
 
 div.main input#search-box {
@@ -8,11 +23,58 @@ div.main input#search-box {
     padding: 5px;
 }
 
+div.logout-container{
+    margin: 10px;
+    padding: 5px;
+}
+
 li.auto-complete-data{
     list-style-type : none;
+    margin-left: 10px;
+    margin-top: 2px;
+    margin-bottom: 2px;
+}
+
+li.card-details{
+    list-style-type : none;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    margin-right: 40px;
 }
 
 li.auto-complete-data:hover{
     cursor:pointer;
     background-color: beige;
+}
+
+div.result{
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+    flex-direction: row;
+    justify-content: space-around;
+    max-width: 80vw;
+    margin: auto;
+    opacity: 1;
+    transition: opacity 1s ;
+}
+
+div.transparent{
+    opacity: 0.5;
+    transition: opacity 1s ;
+}
+
+div.result-item{
+    margin: 5px;
+    padding: 5px;
+    min-width: 150px;
+    min-height: 150px;
+}
+
+button{
+    font-size: 18px;
+}
+
+div.logout-container{
+    margin-top: 1px;
 }

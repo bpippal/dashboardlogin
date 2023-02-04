@@ -1,0 +1,24 @@
+div.main-container{
+    max-width: 40vw;
+    padding: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 150px;
+}
+
+div.main-container form{
+    margin: auto;
+    border: 5px solid black;
+    max-width: 300px;
+    padding: 60px;
+    border-radius: 10px;
+    background-color: #dbf4f1;
+}
+
+button{
+    margin: 10px;
+}
+
+html{
+    background-color: #dbf4f1;
+}

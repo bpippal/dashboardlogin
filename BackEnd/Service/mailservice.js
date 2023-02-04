@@ -1,8 +1,10 @@
 const nodemailer = require("nodemailer");
 const mailConfig = require("../config/mail");
+const baseservice = require("./baseservice");
 
 function mailservice (){
     this.serviceName = "mailservice";
+    baseservice.call(this);
 }
 
 mailservice.prototype.sendOTP = function(email , OTP){

@@ -5,6 +5,7 @@ const bodyparser = require("body-parser");
 const _ = require("lodash");
 const session = require("express-session");
 const cors = require("cors");
+const ejs = require("ejs");
 
 const portConfig = require("./config/port");
 const utils = require("./Service/utils");
@@ -45,7 +46,7 @@ app.get("/" , utils.redirectToDashBoardIfLoggedIn , (req, res) => {
     return res.sendFile(pathForLoginhtml);
 })
 
-app.get("/dashboard" , (req, res) => {
+app.get("/dashboard", utils.isUserLoggedIn , (req, res) => {
     return res.sendFile(path.join(__dirname , '../FrontEnd/Main Page/main.html'));
 })
 
@@ -75,7 +76,7 @@ app.post("/login" , (req, res) => {
         if(isUserAlreadyPresent){
             //Send user Details via mail and redirect to handleButton
             return mailServiceInst.sendOTP(isUserAlreadyPresent.email , isUserAlreadyPresent.otp).then(function(){
-                return res.render("/BackEnd/views/handleButton.ejs" , {email : payload.email , error : false});
+                return res.render("handleButton.ejs" , {email : payload.email , error : false});
             })
         }
         
@@ -135,6 +136,32 @@ app.get("/data/:searchBy" , (req, res) => {
     res.json(filteredData);
 })
 
+app.post("/logout" , (req, res) => {
+    console.log("logout is hit");
+    req.session.destroy(function(err){
+        if(err){
+            return err;
+        }
+
+        res.redirect("/");
+    })
+})
+
+app.get("/html/:country" , (req, res) => {
+
+    const country = req.params.country;
+    const countryDump = require("./data dump/country")
+
+    let queriedCountry = _.find(countryDump , {Name : country})
+
+    if(queriedCountry){
+        return res.render("country.ejs" , queriedCountry);
+    }
+
+    return res.send("No country found");
+
+})
+
 //Load static files for html
 app.get("/static/login" , (req , res) => {
     res.sendFile(rootPath + "FrontEnd/Login Page/login.js")
@@ -147,6 +174,10 @@ app.get("/static/mainjs" , (req, res) => {
 app.get("/static/maincss" , (req, res) => {
     res.sendFile(rootPath + "FrontEnd/Main Page/main.css")
 })
+
+app.get("/static/logincss" , (req, res) => [
+    res.sendFile(rootPath + "FrontEnd/Login Page/login.css")
+])
 
 
 

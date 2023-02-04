@@ -2,9 +2,12 @@ const otpGenerator = require("otp-generator");
 const otpConfig = require("../config/otp");
 const _ = require("lodash");
 const utils = require("./utils")
+const baseservice = require("./baseservice")
+
 
 function otpservice(){
     this.serviceName = "otpservice";
+    baseservice.call(this);
 }
 
 
